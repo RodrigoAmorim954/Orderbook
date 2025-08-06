@@ -54,7 +54,7 @@ A simple decentralized on-chain orderbook system designed  to trade  crypto asse
 git clone https://github.com/RodrigoAmorim954/Orderbook.git
 cd crypto-orderbook
 ```
-### 2. Install dependencies using make:
+### 2. Install the necessary dependencies using make:
 ```
 make install
 ```
@@ -68,10 +68,10 @@ forge test
 You can add flags like -vvvv for verbose output.
 
 ## 🧠 How It Works
-### 🔄 Order Lifecycle
+### 🔄 OrderBook Functionality
 **Create Order:** User submits a buy or sell order using one of the supported tokens placing the amount of tokens to sell and the total that the user wants to receive.
 
-**Execution Fee:** A 3% fee is deducted from the successfull traded amount.
+**Execution Fee:** A 2% fee is deducted from the successfull traded amount.
 
 **Expiration:** The order can be active until 3 days. (timestamp-based).
 
@@ -81,18 +81,12 @@ You can add flags like -vvvv for verbose output.
 
 
 ## 🔮 Future Improvements
-Frontend interface for traders
 
-Event indexer and orderbook visualization
+Create Mocks of erc20 tokens
 
-Dynamic fee adjustment or discounts for certain tokens
+Initialize and Approval the tokens to be traded
 
-Cross-pair routing
-
-More ERC20 token support
-
-Partial order fills
-
+Take the actual address contracts of the tokens in sepolia testnet (if they exists)
 
 
 ## 📄 License

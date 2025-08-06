@@ -409,7 +409,3 @@ contract OrderBook is Ownable {
         return MAX_DEADLINE_DURATION;
     }
 }
-
-// Deploy the contract
-// Create A helper Config to use in differents chains
-// Create the tests
