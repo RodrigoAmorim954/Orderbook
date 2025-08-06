@@ -82,9 +82,9 @@ You can add flags like -vvvv for verbose output.
 
 ## 🔮 Future Improvements
 
-Create Mocks of erc20 tokens
+Create Mocks of erc20 tokens  ~>  Okay
 
-Initialize and Approval the tokens to be traded
+Initialize and Approval the tokens to be traded ??
 
 Take the actual address contracts of the tokens in sepolia testnet (if they exists)
 
