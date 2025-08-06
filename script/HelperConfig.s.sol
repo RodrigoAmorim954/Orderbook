@@ -11,6 +11,8 @@ abstract contract CodeConstants {
 }
 
 contract HelperConfig is Script, CodeConstants {
+    error HelperConfig__InvalidChain();
+
     struct NetworkConfig {
         address weth;
         address wbtc;
@@ -31,25 +33,25 @@ contract HelperConfig is Script, CodeConstants {
     function getConfigByChainId(uint256 _chainId) public returns (NetworkConfig memory) {
         if (networkConfigs[_chainId].weth != address(0) && networkConfigs[_chainId].wbtc != address(0) && networkConfigs[_chainId].dai != address(0)) {
             return networkConfigs[_chainId];
-        } else if (_chainId == SEPOLIA_CHAIN_ID) {
-            return getSepoliaETHConfig();
+        } else if (_chainId == LOCAL_CHAIN_ID) {
+            return networkConfigs[LOCAL_CHAIN_ID] = getOrCreaveAnvilConfig();
         } else {
-            return getOrCreaveAnvilConfig();
+            revert HelperConfig__InvalidChain();
         }
     }
 
     function getOrCreaveAnvilConfig() public returns (NetworkConfig memory) {
-        if (networkConfigs[LOCAL_CHAIN_ID].weth != address(0) && networkConfigs[LOCAL_CHAIN_ID].wbtc != address(0) && networkConfigs[LOCAL_CHAIN_ID].dai != address(0)) {
+        if (networkConfigs[LOCAL_CHAIN_ID].weth != address(0)) {
             return networkConfigs[LOCAL_CHAIN_ID];
+        } else {
+            vm.startBroadcast();
+
+            ERC20Mock dai = new ERC20Mock("Dai", "Dai"); // 0xA8452Ec99ce0C64f20701dB7dD3abDb607c00496
+            ERC20Mock wbtc = new ERC20Mock("Mock Wrapped BTC", "WBtc"); // 0x90193C961A926261B756D1E5bb255e67ff9498A1
+            ERC20Mock weth = new ERC20Mock("Mock Wrapped ETH", "WEth"); // 0x34A1D3fff3958843C43aD80F30b94c510645C316
+            vm.stopBroadcast();
+
+            return NetworkConfig({weth: address(weth), wbtc: address(wbtc), dai: address(dai)});
         }
-
-        vm.startBroadcast();
-
-        ERC20Mock Dai = new ERC20Mock("Dai", "Dai");
-        ERC20Mock WBtc = new ERC20Mock("Mock Wrapped BTC", "Wbtc");
-        ERC20Mock WEth = new ERC20Mock("Mock Wrapped ETH", "WEth");
-        vm.stopBroadcast();
-
-        return NetworkConfig({weth: address(WEth), wbtc: address(WBtc), dai: address(Dai)});
     }
 }

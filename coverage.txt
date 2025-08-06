@@ -1,0 +1,57 @@
+Compiling 41 files with Solc 0.8.20
+Solc 0.8.20 finished in 5.29s
+Compiler run successful!
+Analysing contracts...
+Running tests...
+
+Ran 33 tests for test/unit/OrderBookTest.t.sol:OrderBookTest
+[PASS] testGetOrderDetails() (gas: 279246)
+[PASS] testIfAmendSellOrderIsWorkingUpdatingTheOrderIfABiggerValue() (gas: 276208)
+[PASS] testIfAmendSellOrderIsWorkingUpdatingTheOrderIfASmallerValue() (gas: 271728)
+[PASS] testIfCanBuyOrderEmitsEventAndFeesAreCorrect() (gas: 405064)
+[PASS] testIfCanBuyOrderIfTimeExpired() (gas: 257761)
+[PASS] testIfCancelAOrderWorks() (gas: 226020)
+[PASS] testIfCreateSellOrderIsWorking() (gas: 265801)
+[PASS] testIfEmitEventAddingNewToken() (gas: 96129)
+[PASS] testIfFailsWhenTryToAmendSellOrderIfTheOrderIsNotActive() (gas: 212662)
+[PASS] testIfNewTokenCanBeTradedAndAddsFees() (gas: 472055)
+[PASS] testIfRevertWhenTryingToAddAExistingToken() (gas: 18374)
+[PASS] testIfRevertsWhenTryingToAddAnInvalidToken() (gas: 14102)
+[PASS] testIfRevertsWhenTryingToAmendInvalidAmount() (gas: 246535)
+[PASS] testIfRevertsWhenTryingToAmendInvalidDeadline() (gas: 247093)
+[PASS] testIfRevertsWhenTryingToAmendInvalidOrderId() (gas: 248426)
+[PASS] testIfRevertsWhenTryingToAmendInvalidPrice() (gas: 246600)
+[PASS] testIfRevertsWhenTryingToBuyInactiveOrder() (gas: 244918)
+[PASS] testIfRevertsWhenTryingToBuyInvalidOrderId() (gas: 280201)
+[PASS] testIfRevertsWhenTryingToBuyOrderWithInsufficientFunds() (gas: 282500)
+[PASS] testIfRevertsWhenTryingToCancelIfAnotherUser() (gas: 247203)
+[PASS] testIfRevertsWhenTryingToCancelInvalidOrderId() (gas: 246961)
+[PASS] testIfRevertsWhenTryingToGetAnInvalidTokenByIndex() (gas: 13727)
+[PASS] testIfRevertsWhenTryingToSellInvalidAmount() (gas: 17337)
+[PASS] testIfRevertsWhenTryingToSellInvalidDeadline() (gas: 17555)
+[PASS] testIfRevertsWhenTryingToSellInvalidPrice() (gas: 17360)
+[PASS] testIfRevertsWhenTryngToAmendIfAnotherUser() (gas: 248536)
+[PASS] testIfRevertsWhentryingToUseAnInvalidToken() (gas: 15160)
+[PASS] testIfTokenAllowedIsCorrectAndCorrectlyConstantsValues() (gas: 36310)
+[PASS] testIfTokenAndSymbolAddressAreInitializedCorrectly() (gas: 47367)
+[PASS] testWithdrawFeesCorrectly() (gas: 379213)
+[PASS] testWithdrawIfAmountIsLessThenFess() (gas: 373837)
+[PASS] testWithdrawIfInvalidAmount() (gas: 377525)
+[PASS] testWithdrawIfIsSentToAddressZero() (gas: 373466)
+Suite result: ok. 33 passed; 0 failed; 0 skipped; finished in 7.38ms (23.47ms CPU time)
+
+Ran 1 test suite in 18.21ms (7.38ms CPU time): 33 tests passed, 0 failed, 0 skipped (33 total tests)
+
+╭------------------------------+------------------+------------------+----------------+-----------------╮
+| File                         | % Lines          | % Statements     | % Branches     | % Funcs         |
++=======================================================================================================+
+| script/DeployOrderBook.s.sol | 100.00% (8/8)    | 100.00% (9/9)    | 100.00% (0/0)  | 100.00% (1/1)   |
+|------------------------------+------------------+------------------+----------------+-----------------|
+| script/HelperConfig.s.sol    | 84.21% (16/19)   | 91.30% (21/23)   | 50.00% (3/6)   | 75.00% (3/4)    |
+|------------------------------+------------------+------------------+----------------+-----------------|
+| src/OrderBook.sol            | 93.96% (140/149) | 94.00% (141/150) | 75.68% (28/37) | 100.00% (17/17) |
+|------------------------------+------------------+------------------+----------------+-----------------|
+| test/mocks/ERC20Mock.sol     | 100.00% (2/2)    | 100.00% (1/1)    | 100.00% (0/0)  | 100.00% (1/1)   |
+|------------------------------+------------------+------------------+----------------+-----------------|
+| Total                        | 93.26% (166/178) | 93.99% (172/183) | 72.09% (31/43) | 95.65% (22/23)  |
+╰------------------------------+------------------+------------------+----------------+-----------------╯

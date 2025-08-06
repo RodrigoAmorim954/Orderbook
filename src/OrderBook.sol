@@ -29,8 +29,8 @@ contract OrderBook is Ownable {
     }
 
     // --- Constants ---
-    uint256 private constant MAX_DEADLINE_DURATION = 5 days; // Max duration from order creation to expiration
-    uint256 private constant FEE = 3; // 3%
+    uint256 private constant MAX_DEADLINE_DURATION = 60; // Max duration from order creation to expiration (60 seconds)
+    uint256 private constant FEE = 2; // 2%
     uint256 private constant PRECISION = 100;
 
     // --- State Variables ---
@@ -61,10 +61,11 @@ contract OrderBook is Ownable {
     error OrderBook__InvalidPrice();
     error OrderBook__InvalidDeadline();
     error OrderBook__InvalidOrder();
-    error OrderBook__OrderExpired();
+    error OrderBook__OrderInactive();
     error OrderBook__InvalidWithdrawAmount();
     error OrderBook__InvalidAddress();
     error OrderBook__InvalidTokenIndex();
+    error OrderBook__InsufficientFunds();
 
     // --- Constructor ---
     constructor(address _owner, address _weth, address _wbtc, address _Dai) Ownable(_owner) {
@@ -132,7 +133,7 @@ contract OrderBook is Ownable {
             isActive: true
         });
 
-        emit OrderCreated(orderId, msg.sender, _tokenToSell, _amountToSell, _priceInUSD, deadlineTimeStamp);
+        emit OrderCreated(orderId, msg.sender, _tokenToSell, _amountToSell, _priceInUSD, _deadline);
 
         // -- Interactions ---
         IERC20(_tokenToSell).safeTransferFrom(msg.sender, address(this), _amountToSell);
@@ -152,12 +153,13 @@ contract OrderBook is Ownable {
         // --- Checks ---
         Order storage order = s_orders[_orderId];
 
-        if (order.seller != msg.sender) {
-            revert OrderBook__InvalidSender();
-        }
         if (order.orderId == 0) {
             revert OrderBook__InvalidOrder();
         }
+        if (order.seller != msg.sender) {
+            revert OrderBook__InvalidSender();
+        }
+
         if (_newAmountToSell <= 0) {
             revert OrderBook__InvalidAmount();
         }
@@ -165,8 +167,7 @@ contract OrderBook is Ownable {
             revert OrderBook__InvalidPrice();
         }
         if (order.isActive == false) {
-            _orderCancelation(_orderId);
-            emit OrderExpired(_orderId);
+            revert OrderBook__OrderInactive();
         }
         if (updateDeadline == true) {
             if (_newDeadline == 0 || _newDeadline > block.timestamp + MAX_DEADLINE_DURATION) {
@@ -182,7 +183,7 @@ contract OrderBook is Ownable {
 
         order.priceInUSD = _priceInUSD;
 
-        emit OrderAmended(_orderId, _newAmountToSell, _priceInUSD, order.deadlineTimeStamp);
+        emit OrderAmended(_orderId, _newAmountToSell, _priceInUSD, _newDeadline);
 
         // -- Interactions ---
 
@@ -207,14 +208,15 @@ contract OrderBook is Ownable {
         // --- Checks ---
         Order storage order = s_orders[_orderId];
 
-        if (order.seller != msg.sender) {
-            revert OrderBook__InvalidSender();
-        }
         if (order.orderId == 0) {
             revert OrderBook__InvalidOrder();
         }
+        if (order.seller != msg.sender) {
+            revert OrderBook__InvalidSender();
+        }
+
         if (order.isActive == false) {
-            revert OrderBook__OrderExpired();
+            revert OrderBook__OrderInactive();
         }
 
         // --- Effects ---
@@ -240,13 +242,17 @@ contract OrderBook is Ownable {
         if (order.seller == address(0)) {
             revert OrderBook__InvalidAddress();
         }
-        if (order.isActive == false) {
-            revert OrderBook__OrderExpired();
-        }
         if (block.timestamp > order.deadlineTimeStamp) {
             _orderCancelation(_orderId);
             emit OrderExpired(_orderId);
             return;
+        }
+        if (order.isActive == false) {
+            revert OrderBook__OrderInactive();
+        }
+
+        if (order.priceInUSD > (IERC20(iDai).balanceOf(msg.sender))) {
+            revert OrderBook__InsufficientFunds();
         }
 
         // --- Effects ---
@@ -405,7 +411,19 @@ contract OrderBook is Ownable {
         return FEE;
     }
 
+    function getPrecision() external pure returns (uint256) {
+        return PRECISION;
+    }
+
     function getMaximumDeadline() external pure returns (uint256) {
         return MAX_DEADLINE_DURATION;
+    }
+
+    function getOwner() external view returns (address) {
+        return owner();
+    }
+
+    function getTotalFees(address _token) external view returns (uint256) {
+        return s_totalFees[_token];
     }
 }
